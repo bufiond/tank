@@ -14,11 +14,19 @@ public class Tank {
 	private boolean moving = true;
 	private boolean living = true;
 	private TankFrame tFrame;
+	public TankFrame gettFrame() {
+		return tFrame;
+	}
+
+	public void settFrame(TankFrame tFrame) {
+		this.tFrame = tFrame;
+	}
 	private Group group = Group.GOOD;
 	Random random = new Random();
 	public int WIDTH = ResourceMgr.tankD.getWidth();
 	public int HEIGHT = ResourceMgr.tankD.getHeight();
-
+	FireStrategy fs;
+	
 	public Dir getDir() {
 		return dir;
 	}
@@ -42,6 +50,8 @@ public class Tank {
 		this.dir = dir;
 		this.tFrame = tf;
 		this.group = group;
+		if(group==Group.GOOD)fs=new FourDirFireStrategy();
+		else fs=new DefaultFireStrategy();
 	}
 
 	public void paint(Graphics g) {
@@ -106,15 +116,16 @@ public class Tank {
 	}
 
 	private void move() {
+		Dir[] dirs=Dir.values();
 		if (!moving)
 			return;
 		if (x <= 0) {
 			x = 10;
-			dir = randomDir();
+			dir = dirs[random.nextInt(4)];
 		}
 		if (x >= tFrame.getWidth() - this.WIDTH) {
 			x = tFrame.getWidth() - this.WIDTH - 10;
-			dir = randomDir();
+			dir = dirs[random.nextInt(4)];;
 		}
 		if (y <= 0) {
 			y = this.WIDTH - 10;
@@ -144,28 +155,8 @@ public class Tank {
 	}
 
 	public void fire() {
-		int bx = x, by = y;
-		switch (dir) {
-		case LEFT:
-			bx = x - 10;
-			by = y + WIDTH / 2 - 5;
-			break;
-		case UP:
-			by = y - 10;
-			bx = x + WIDTH / 2 - 5;
-			break;
-		case RIGHT:
-			bx = x + HEIGHT;
-			by = y + WIDTH / 2 - 5;
-			break;
-		case DOWN:
-			bx = x + WIDTH / 2 - 5;
-			by = y + HEIGHT;
-			break;
-		default:
-			break;
-		}
-		tFrame.bullets.add(new Bullet(bx, by, this.dir, tFrame, this.group));
+		fs.fire(this);
+		//tFrame.bullets.add(new Bullet(bx, by, this.dir, tFrame, this.group));
 
 	}
 

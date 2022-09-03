@@ -25,6 +25,7 @@ public class Bullet {
 		this.dir=dir;
 		this.tFrame=tf;
 		this.group=group;
+		tFrame.bullets.add(this);
 	}
 	public void paint(Graphics g) {
 		if(!living) {

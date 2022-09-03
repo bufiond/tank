@@ -53,7 +53,7 @@ public class TankFrame extends Frame {
 				super.windowClosing(e);
 			}
 		});
-		for(int i=1;i<random.nextInt(20);i++) {
+		for(int i=1;i<10;i++) {
 			
 			foeTanks.add(new Tank(100*i,100,randomDir(),this,Group.BAD));
 		}
